@@ -1,18 +1,22 @@
 {
 	"compilerOptions": {
+		"declaration": false,
+		"module": "commonjs",
+		"outDir": "_build/",
+		"removeComments": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
 		"inlineSourceMap": true,
 		"inlineSources": true,
 		"listFiles": true,
-		"module": "commonjs",
 		"noImplicitAny": true,
 		"pretty": true,
+		"moduleResolution": "node",
 		"target": "es6"
 	},
 	"include": [
-		"./index.ts",
-		"./index.d.ts",
-		"./options/**/*.ts",
-		"./tasks/**/*.ts",
+		"./src/**/*.ts",
+		"./tests/**/*.ts",
 		"./typings/index.d.ts"
 	]
 }
