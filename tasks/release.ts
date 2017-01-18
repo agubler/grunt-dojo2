@@ -13,7 +13,7 @@ export = function(grunt: IGrunt, packageJson: any) {
 	const defaultBranch = 'master';
 	const preReleaseTags = ['alpha', 'beta', 'rc'];
 	const gitBaseRemote = 'git@github.com:dojo/';
-	const defaultMaintainers = ['sitepen', 'dojotoolkit'];
+	const defaultMaintainers = ['sitepen', 'dojotoolkit', 'dojo'];
 	const extraToCopy = ['README.md'];
 
 	const releaseVersion = grunt.option<string>('release-version');
@@ -23,6 +23,7 @@ export = function(grunt: IGrunt, packageJson: any) {
 	const tag = grunt.option<string>('tag');
 	const pushBack = grunt.option<boolean>('push-back');
 	const initial = grunt.option<boolean>('initial');
+	const portPackage = grunt.option<boolean>('portPackage');
 	const skipChecks = grunt.option<boolean>('skip-checks');
 
 	const initialPackageJson = grunt.file.readJSON(path.join(packagePath, 'package.json'));
@@ -136,7 +137,7 @@ export = function(grunt: IGrunt, packageJson: any) {
 
 	grunt.registerTask('release-publish', 'publish the package to npm', function (this: ITask) {
 		const done = this.async();
-		const args = ['publish', '.'];
+		const args = ['publish', '--access', 'public', '.'];
 		const promises = [command(npmBin, args, { cwd: temp }, false)];
 		if (tag) {
 			args.push('--tag', tag);
@@ -151,7 +152,20 @@ export = function(grunt: IGrunt, packageJson: any) {
 	grunt.registerTask('release-version-pre-release-tag', 'auto version based on pre release tag', function (this: ITask) {
 		const done = this.async();
 		const versionInPackage = initialPackageJson.version.replace(/-.*/g, '');
-		if (initial) {
+		if (initial && portPackage) {
+			const name = initialPackageJson.name.replace('@', '').replace('/', '-');
+			return command(npmBin, ['view', name, '--json'], {}, true).then((result: any) => {
+				if (result.stdout) {
+					const time = JSON.parse(result.stdout).time;
+					const versions = Object.keys(time).filter((key) => {
+						return ['created', 'modified'].indexOf(key) < 0;
+					});
+					npmPreReleaseVersion(versionInPackage, versions).then(done);
+				} else {
+					grunt.fail.fatal('failed to fetch versions from npm');
+				}
+			});
+		} else if (initial) {
 			return npmPreReleaseVersion(versionInPackage, []).then(done);
 		} else {
 			return command(npmBin, ['view', '.', '--json'], {}, true).then((result: any) => {
