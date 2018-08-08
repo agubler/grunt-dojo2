@@ -24,8 +24,6 @@ exports.initConfig = function(grunt: IGrunt, otherOptions: any) {
 	const packageJson = grunt.file.readJSON('package.json');
 
 	const devTasks = [
-		'clean:typings',
-		'typings:dev',
 		'tslint',
 		'clean:dev',
 		'tcm',
@@ -35,8 +33,6 @@ exports.initConfig = function(grunt: IGrunt, otherOptions: any) {
 	];
 
 	const distTasks = [
-		'clean:typings',
-		'typings:dist',
 		'tslint',
 		'clean:dist',
 		'tcm',
@@ -47,7 +43,7 @@ exports.initConfig = function(grunt: IGrunt, otherOptions: any) {
 
 	const distESMTasks = ['dojo-ts:esm'];
 
-	const docTasks = ['clean:typings', 'typings:dev', 'typedoc', 'clean:typedoc', 'clean:ghpages'];
+	const docTasks = ['typedoc', 'clean:typedoc', 'clean:ghpages'];
 
 	grunt.initConfig({
 		name: packageJson.name,

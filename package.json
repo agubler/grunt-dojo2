@@ -49,7 +49,6 @@
     "grunt-postcss": "^0.8.0",
     "grunt-text-replace": ">=0.4.0",
     "grunt-ts": "^6.0.0-beta.21",
-    "grunt-typings": "^0.1.5",
     "intern": "~4.2.0",
     "lodash": "^4.15.0",
     "parse-git-config": "^0.4.2",
